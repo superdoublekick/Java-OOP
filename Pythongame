@@ -1,0 +1,101 @@
+#Въвеждам произволното число, като тази функция не позволява то да има повтарящи се цифри
+def choosing_rand_num():
+    #Въвеждам първата цифра от произволното число
+    rand_first_int = random.randint(1,9)
+
+    rand_second_int = random.randint(1,9)
+    #Въвеждам чрез цикъла while втората цифра от числото, за да не се повтарят
+    while rand_second_int == rand_first_int:
+        rand_second_int = random.randint(1,9)
+
+    rand_third_int = random.randint(1,9)
+    # въвеждам третата цифра от числото
+    while rand_third_int == rand_first_int or rand_third_int == rand_second_int:
+        rand_third_int = random.randint(1,9)
+
+    #Връщам го под формата на низ
+    return str(rand_first_int) + str(rand_second_int) + str(rand_third_int)
+
+rand_num = choosing_rand_num()
+#print(rand_num)
+
+
+#Помощна функция за принтиране на крайния резултат
+def result_printer(template):
+    for i in template:
+        print(f"{i}: {template.get(i)}")
+
+def suggested_num(num):
+    #Въвеждам номер на сегашния ход
+    move = 1
+
+    moves = {}
+    end_results = {}
+    in_game = True
+    #Правя цикъл, който да поддържа играта
+    while in_game == True:
+        #Искам от потребителя да въведе своето предположение за числото
+        currentnum = int(input("Enter your suggestion: "))
+
+        moves["MoveNumber"] = currentnum
+
+        dict_of_cows_or_bulls = {}
+
+        string_rand_num = str(num)
+        string_suggested_num = str(currentnum)
+        correct_digits_bulls = 0
+        correct_digits_cows = 0
+
+        dict_of_cows_or_bulls["cows"] = 0
+        dict_of_cows_or_bulls["bulls"] = 0
+        #Правя цикъл, в който проверявам дали потребителят е познал всички цифри на числото
+        for i in range(3):
+            if string_rand_num[i] == string_suggested_num[i]:
+                correct_digits_bulls += 1
+                dict_of_cows_or_bulls["bulls"] = correct_digits_bulls
+
+        #Започвам с проверки, като първата от тях е, ако са познати всички цифри
+        if correct_digits_bulls == 3:
+
+
+            print(f"Congratulations! On move {move} you won the game! You have 3 Bulls! The number is {currentnum}! " + f"\n {dict_of_cows_or_bulls} ")
+            return  result_printer(end_results)
+        #Старт на проверките
+        if string_suggested_num[0] == string_rand_num[1]:
+            correct_digits_cows += 1
+            dict_of_cows_or_bulls["cows"] = correct_digits_cows
+        elif string_suggested_num[0] == string_rand_num[2]:
+            correct_digits_cows += 1
+            dict_of_cows_or_bulls["cows"] = correct_digits_cows
+
+        elif string_suggested_num[1] == string_rand_num[2]:
+            correct_digits_cows += 1
+            dict_of_cows_or_bulls["cows"] = correct_digits_cows
+        elif string_suggested_num[1] == string_rand_num[0]:
+            correct_digits_cows += 1
+            dict_of_cows_or_bulls["cows"] = correct_digits_cows
+        elif string_suggested_num[2] == string_rand_num[0]:
+            correct_digits_cows += 1
+            dict_of_cows_or_bulls["cows"] = correct_digits_cows
+        elif string_suggested_num[2] == string_rand_num[1]:
+            correct_digits_cows += 1
+            dict_of_cows_or_bulls["cows"] = correct_digits_cows
+        else :
+            #В случай че не са изпълнени условията по-горе
+            print(f"Move {move}; Number: {moves.get('MoveNumber')}, cows: {dict_of_cows_or_bulls}\n Please try again...")
+            moves["Result"] = dict_of_cows_or_bulls
+            end_results[moves.get("MoveNumber")] = dict_of_cows_or_bulls
+            move += 1
+            continue
+        #Принтирам, в случай че програмата не е влязла в горния else
+        print(f"Move {move}; Number: {moves.get('MoveNumber')}, cows: {dict_of_cows_or_bulls}\n Please try again...")
+        moves["Result"] = dict_of_cows_or_bulls
+        #Правя речник, в който да държа цялостната информация за играта
+        end_results[moves.get("MoveNumber")] = dict_of_cows_or_bulls
+        move += 1
+        #В случай че отново са познати всички цифри в края на програмата
+        if moves.get("Result").get("bulls") == 3:
+
+            print(f"Congratulations! On move {move} you won the game! You have 3 Bulls! " + f"\n {moves} {dict_of_cows_or_bulls}")
+            return result_printer(end_results)
+print(suggested_num(rand_num))
